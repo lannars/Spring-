@@ -1,0 +1,58 @@
+-- Cargo
+package modelo;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Data
+@Table(name= "cargo")
+public class Cargo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String descricao;
+    private double salario;
+}
+
+-- DemoApplication
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemoApplication.class, args);
+	}
+
+}
+
+-- ControleCargo
+package controller;
+
+import modelo.Cargo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import repositorio.RepositorioCargo;
+
+@RequestMapping("/cargo")
+@RestController
+public class ControleCargo {
+
+    @Autowired
+    private RepositorioCargo repositorioCargo;
+
+
+    @GetMapping("/listar")
+    public Iterable<Cargo>listar(){
+        return repositorioCargo.findAll();
+    }
+
+    @PostMapping("/cadastrar")
+    public Cargo cadastrar(@RequestBody Cargo cargo) {
+        return repositorioCargo.save(cargo);
+    }
+}
